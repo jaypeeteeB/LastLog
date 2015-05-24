@@ -23,12 +23,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+
+// copy of lastlogexecutor
+// should not be needed
+
 public class FirstLogExecutor implements CommandExecutor {
         private LastLogPlugin plugin;
+        private boolean lastlog;
         private CommandLineParser parser = new SimpleCLParser();
         
-        public FirstLogExecutor(LastLogPlugin plugin) {
+        public FirstLogExecutor(LastLogPlugin plugin, boolean lastlog) {
                 this.plugin = plugin;
+                // flag for firstlog false, lastlog true
+                this.lastlog = lastlog;
         }
 
         @Override
@@ -87,9 +94,9 @@ public class FirstLogExecutor implements CommandExecutor {
                     }
             }
 
-            PlayerList playerList = plugin.getPlayerList(false);
+            PlayerList playerList = plugin.getPlayerList(lastlog);
             playerList.sort();
-            playerList.displayPage(options, false, sender);
+            playerList.displayPage(options, lastlog, sender);
             return true;
         }
 }

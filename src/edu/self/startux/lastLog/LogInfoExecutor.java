@@ -21,6 +21,8 @@
 
 package edu.self.startux.lastLog;
 
+import java.util.UUID;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,27 +35,19 @@ public class LogInfoExecutor implements CommandExecutor {
                 this.plugin = plugin;
         }
         
-        // Change to UUID
-        // OfflinePlayer[] getOfflinePlayers()
-        // getPlayer(uuid).getName();
         public OfflinePlayer findPlayer(String name) {
-                // try match exact name with any known player
-        		OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
-                // if none is found, be more lenient with online players
-                if (!player.hasPlayedBefore()) {
-                        player = plugin.getServer().getPlayer(name);
-                }
-                // if that fails, look if a matching player is known
-                if (player == null) {
-                        PlayerList list = plugin.getPlayerList(true);
-                        for (PlayerList.Entry entry : list) {
-                                String lowerName = name.toLowerCase();
-                                if (entry.name.toLowerCase().startsWith(lowerName)) {
-                                        player = plugin.getServer().getOfflinePlayer(entry.name);
-                                        break;
-                                }
-                        }
-                }
+        		UUID uuid = null;
+
+        		// try match exact name with any known player
+        		PlayerList.Entry entry = plugin.getPlayerList(true).getEntry(name);
+        		if (entry == null) {
+        			entry = plugin.getPlayerList(true).getWeakEntry(name);
+        			if (entry == null)
+        				return null;
+        		}
+                uuid = entry.uuid;
+                OfflinePlayer player = plugin.getServer().getOfflinePlayer(uuid);
+        		
                 return player;
         }
 
@@ -101,7 +95,8 @@ public class LogInfoExecutor implements CommandExecutor {
                                                 last = entry.time;
                                         }
                                 }
-                                sender.sendMessage("Player " + LastLogColors.PLAYER_NAME + name + " " + (player.isOnline() ? LastLogColors.ONLINE + "Online" : LastLogColors.OFFLINE + "Offline"));
+                                sender.sendMessage("Player " + LastLogColors.PLAYER_NAME + name + " " 
+                                		+ (player.isOnline() ? LastLogColors.ONLINE + "Online" : LastLogColors.OFFLINE + "Offline"));
                                 sender.sendMessage(LastLogColors.DATE
                                                    + new LastLogDate(first)
                                                    + LastLogColors.RESET

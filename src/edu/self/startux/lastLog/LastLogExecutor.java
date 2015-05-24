@@ -30,6 +30,7 @@ public class LastLogExecutor implements CommandExecutor {
 
         public LastLogExecutor(LastLogPlugin plugin, boolean lastlog) {
                 this.plugin = plugin;
+                // flag for firstlog false, lastlog true
                 this.lastlog = lastlog;
                 parser.setArgCount(parser.addFlag('a', "after"), 1);
                 parser.setArgCount(parser.addFlag('b', "before"), 1);

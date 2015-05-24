@@ -24,6 +24,7 @@ package edu.self.startux.lastLog;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -40,10 +41,23 @@ public class PlayerList implements Iterable<PlayerList.Entry> {
 
         public class Entry {
                 public String name;
+                public UUID uuid;
                 public long time;
                 public Entry(String name, long time) {
                         this.name = name;
                         this.time = time;
+                        this.uuid = null;
+                }
+                public Entry(String name, long time, UUID uuid) {
+                    this.name = name;
+                    this.time = time;
+                    this.uuid = uuid;
+                }
+                
+                public Entry(OfflinePlayer player, long time) {
+                    this.name = player.getName();
+                    this.uuid = player.getUniqueId();
+                    this.time = time;
                 }
         }
 
@@ -91,10 +105,12 @@ public class PlayerList implements Iterable<PlayerList.Entry> {
                 length = playerList.length;
                 while (tmplen < length) tmplen *= 2;
                 this.playerList = new Entry[tmplen];
+                
                 int i = 0;
                 for (OfflinePlayer player : playerList) {
                         long time = (lastlog ? player.getLastPlayed() : player.getFirstPlayed());
-                        this.playerList[i++] = new Entry(player.getName(), time);
+                        // this.playerList[i++] = new Entry(player.getName(), time);
+                        this.playerList[i++] = new Entry(player, time);
                 }
         }
 
@@ -117,22 +133,47 @@ public class PlayerList implements Iterable<PlayerList.Entry> {
                 return playerList[index];
         }
 
+        public Entry getWeakEntry(String name) {
+        	String lname = name.toLowerCase();
+            for (int i = 0; i < length; ++i) {
+                    Entry entry = playerList[i];
+                    if (entry.name.toLowerCase().startsWith(lname)) return entry;
+            }
+            return null;
+        }
+
         public Entry getEntry(String name) {
-                for (int i = 0; i < length; ++i) {
-                        Entry entry = playerList[i];
-                        if (entry.name.equalsIgnoreCase(name)) return entry;
-                }
-                return null;
+            for (int i = 0; i < length; ++i) {
+                    Entry entry = playerList[i];
+                    if (entry.name.equalsIgnoreCase(name)) return entry;
+            }
+            return null;
+        }
+        public Entry getEntry(UUID uuid) {
+            for (int i = 0; i < length; ++i) {
+                    Entry entry = playerList[i];
+                    if (entry.uuid == uuid) return entry;
+            }
+            return null;
         }
 
         Entry addEntry(String name) {
-                length += 1;
-                if (length > playerList.length) {
-                        playerList = Arrays.copyOf(playerList, playerList.length * 2);
-                }
-                Entry entry = new Entry(name, 0);
-                playerList[length - 1] = entry;
-                return entry;
+            length += 1;
+            if (length > playerList.length) {
+                    playerList = Arrays.copyOf(playerList, playerList.length * 2);
+            }
+            Entry entry = new Entry(name, 0);
+            playerList[length - 1] = entry;
+            return entry;
+        }
+        Entry addEntry(OfflinePlayer player) {
+            length += 1;
+            if (length > playerList.length) {
+                    playerList = Arrays.copyOf(playerList, playerList.length * 2);
+            }
+            Entry entry = new Entry(player, 0);
+            playerList[length - 1] = entry;
+            return entry;
         }
 
         public void set(String name, long time) {
@@ -142,6 +183,14 @@ public class PlayerList implements Iterable<PlayerList.Entry> {
                 }
                 entry.time = time;
         }
+        public void set(OfflinePlayer player, long time) {
+            Entry entry = getEntry(player.getName());
+            if (entry == null) {
+                    entry = addEntry(player);
+            }
+            entry.time = time;
+        }
+
 
         public int getPageCount() {
                 return ((getLength() - 1) / PAGE_LENGTH) + 1;
@@ -197,9 +246,10 @@ public class PlayerList implements Iterable<PlayerList.Entry> {
                         int index = minIndex + options.pageNumber * PAGE_LENGTH + i;
                         if (index > maxIndex || index < minIndex) break;
                         String name = getEntry(index).name;
+                        UUID id = getEntry(index).uuid;
                         long date = getEntry(index).time;
-                        // Change to UUID Lookup
-                        String nameColor = Bukkit.getServer().getOfflinePlayer(name).isOnline() ? LastLogColors.ONLINE : LastLogColors.RESET;
+                        // Changed to UUID Lookup of online state
+                        String nameColor = Bukkit.getServer().getOfflinePlayer(id).isOnline() ? LastLogColors.ONLINE : LastLogColors.RESET;
                         sender.sendMessage(LastLogColors.DATE
                                            + new LastLogDate(date)
                                            + " " + nameColor + name);

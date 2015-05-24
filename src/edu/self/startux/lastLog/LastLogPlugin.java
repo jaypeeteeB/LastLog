@@ -79,14 +79,24 @@ public class LastLogPlugin extends JavaPlugin implements Listener {
         public void onPlayerJoin(PlayerJoinEvent event) {
                 Player player = event.getPlayer();
                 String name = player.getName();
+                
                 long last = System.currentTimeMillis();
-                lastlogList.set(name, last);
+                // lastlogList.set(name, last);
+                lastlogList.set(player, last);
+                
+                
                 if (!player.hasPlayedBefore()) {
                         long first = last;
-                        firstlogList.set(name, first);
+                        // firstlogList.set(name, first);
+                        firstlogList.set(player, first);
+                        
+                        // Sends a message to every player 
+                        // Should be possible in another way
                         String message = LastLogColors.UNKNOWN + name + LastLogColors.HEADER + " has logged in for the first time";
                         // getServer().broadcast(message, NOTIFY_PERMISSION); // this acts weird
+                        
                         getServer().getConsoleSender().sendMessage(message);
+                        
                         for (Player rec : getServer().getOnlinePlayers()) {
                                 if (rec.hasPermission(NOTIFY_PERMISSION)) {
                                         rec.sendMessage(message);
