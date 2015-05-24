@@ -1,5 +1,7 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Copyright 2012 StarTux.
+ * Copyright 2015 Jaypeetee.
+ * Fixed for Bukkit 1.8.4
  *
  * This file is part of LastLog.
  *
@@ -19,13 +21,13 @@
 
 package edu.self.startux.lastLog;
 
-import java.lang.Iterable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.Bukkit;
 
 public class PlayerList implements Iterable<PlayerList.Entry> {
         final private static int PAGE_LENGTH = 10; // how many lines per page?
@@ -196,6 +198,7 @@ public class PlayerList implements Iterable<PlayerList.Entry> {
                         if (index > maxIndex || index < minIndex) break;
                         String name = getEntry(index).name;
                         long date = getEntry(index).time;
+                        // Change to UUID Lookup
                         String nameColor = Bukkit.getServer().getOfflinePlayer(name).isOnline() ? LastLogColors.ONLINE : LastLogColors.RESET;
                         sender.sendMessage(LastLogColors.DATE
                                            + new LastLogDate(date)

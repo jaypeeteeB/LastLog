@@ -1,5 +1,7 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Copyright 2012 StarTux.
+ * Copyright 2015 Jaypeetee.
+ * Fixed for Bukkit 1.8.4
  *
  * This file is part of LastLog.
  *
@@ -19,13 +21,12 @@
 
 package edu.self.startux.lastLog;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 public class SimpleCLParser implements CommandLineParser {
         private static class FlagData {

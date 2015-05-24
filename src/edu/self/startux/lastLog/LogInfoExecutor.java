@@ -1,5 +1,7 @@
 /*
  * Copyright 2012 StarTux.
+ * Copyright 2015 Jaypeetee.
+ * Fixed for Bukkit 1.8.4
  *
  * This file is part of LastLog.
  *
@@ -19,12 +21,10 @@
 
 package edu.self.startux.lastLog;
 
-import java.util.List;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class LogInfoExecutor implements CommandExecutor {
         private LastLogPlugin plugin;
@@ -33,9 +33,12 @@ public class LogInfoExecutor implements CommandExecutor {
                 this.plugin = plugin;
         }
         
+        // Change to UUID
+        // OfflinePlayer[] getOfflinePlayers()
+        // getPlayer(uuid).getName();
         public OfflinePlayer findPlayer(String name) {
                 // try match exact name with any known player
-                OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
+        		OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
                 // if none is found, be more lenient with online players
                 if (!player.hasPlayedBefore()) {
                         player = plugin.getServer().getPlayer(name);

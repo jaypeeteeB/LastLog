@@ -1,5 +1,7 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Copyright 2012 StarTux.
+ * Copyright 2015 Jaypeetee.
+ * Fixed for Bukkit 1.8.4
  *
  * This file is part of LastLog.
  *
@@ -19,23 +21,40 @@
 
 package edu.self.startux.lastLog;
 
-import java.lang.StringBuffer;
-import java.util.List;
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class HelpScreen {
-        private LastLogPlugin plugin;
+        // private LastLogPlugin plugin;
         private String[] lines;
 
         public HelpScreen(LastLogPlugin plugin) {
-                this.plugin = plugin;
-                ConfigurationSection section = YamlConfiguration.loadConfiguration(plugin.getResource("help.yml"));
+                // this.plugin = plugin;
+                File help = new File("help.yml");
+                // plugin.getResource("help.yml")
+                if (!help.exists()) {
+                	System.out.println("LastLog: help.yml not found");
+                	return;
+                }
+                ConfigurationSection section = YamlConfiguration.loadConfiguration(help);
+                String root =  section.getName();
+                if (root == null) {
+                	System.out.println("LastLog: root == null");
+                } else {
+                	System.out.println("LastLog: root = " + root);
+                }
+                
                 String message = section.getString("helpmessage");
+                if (message == null) {
+                	System.out.println("LastLog: Failed to load helpmessage");
+                	return;
+                }
                 Pattern pattern = Pattern.compile("`([0-9a-f])");
                 Matcher matcher = pattern.matcher(message);
                 StringBuffer buf = new StringBuffer();

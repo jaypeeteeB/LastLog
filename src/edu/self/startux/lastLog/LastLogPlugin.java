@@ -1,5 +1,7 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Copyright 2012 StarTux.
+ * Copyright 2015 Jaypeetee.
+ * Fixed for Bukkit 1.8.4
  *
  * This file is part of LastLog.
  *
@@ -19,19 +21,16 @@
 
 package edu.self.startux.lastLog;
 
-import java.util.logging.Logger;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LastLogPlugin extends JavaPlugin implements Listener {
-        private Logger logger;
+        // private Logger logger;
         final public static String NOTIFY_PERMISSION = "lastlog.notify";
         private PlayerList firstlogList;
         private PlayerList lastlogList;
@@ -54,7 +53,7 @@ public class LastLogPlugin extends JavaPlugin implements Listener {
                 getCommand("lastlog").setExecutor(lastLogExecutor);
                 getCommand("loginfo").setExecutor(logInfoExecutor);
                 getServer().getPluginManager().registerEvents(this, this);
-                logger = getServer().getLogger();
+                // logger = getServer().getLogger();
                 // Apparently what takes the most time are the following I/O heavy instructions.
                 // Hence, their output will be cached. Initialize the cache with bukkit data.
                 OfflinePlayer[] players = getServer().getOfflinePlayers();
@@ -65,7 +64,7 @@ public class LastLogPlugin extends JavaPlugin implements Listener {
 
         @Override
         public void onDisable() {
-                logger = null;
+                // logger = null;
                 firstlogList = null;
                 lastlogList = null;
                 helpScreen = null;

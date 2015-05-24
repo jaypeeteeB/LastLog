@@ -1,5 +1,7 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Copyright 2012 StarTux.
+ * Copyright 2015 Jaypeetee.
+ * Fixed for Bukkit 1.8.4
  *
  * This file is part of LastLog.
  *
@@ -19,19 +21,18 @@
 
 package edu.self.startux.lastLog;
 
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.util.GregorianCalendar;
-import java.util.Calendar;
+import java.util.regex.Pattern;
 
 // Date with more decent output
 public class LastLogDate extends Date
 {
-        private static Pattern timePattern; // pattern for a timespan
+		private static final long serialVersionUID = 8323910998037129823L;
+		private static Pattern timePattern; // pattern for a timespan
         private static int[] timeFields = { Calendar.YEAR, Calendar.MONTH, Calendar.WEEK_OF_YEAR, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND };
         private static Pattern datePattern; // pattern for a date to parse
         private static int[] dateFields = { Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND };
@@ -137,12 +138,12 @@ public class LastLogDate extends Date
                 cal.setTime(this);
                 Locale locale = Locale.US;
                 return String.format("%3s %3s %02d %04d %02d:%02d:%02d",
-                                     cal.getDisplayName(cal.DAY_OF_WEEK, cal.SHORT, locale),
-                                     cal.getDisplayName(cal.MONTH, cal.SHORT, locale),
-                                     cal.get(cal.DAY_OF_MONTH),
-                                     cal.get(cal.YEAR),
-                                     cal.get(cal.HOUR_OF_DAY),
-                                     cal.get(cal.MINUTE),
-                                     cal.get(cal.SECOND));
+                                     cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale),
+                                     cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, locale),
+                                     cal.get(Calendar.DAY_OF_MONTH),
+                                     cal.get(Calendar.YEAR),
+                                     cal.get(Calendar.HOUR_OF_DAY),
+                                     cal.get(Calendar.MINUTE),
+                                     cal.get(Calendar.SECOND));
         }
 }

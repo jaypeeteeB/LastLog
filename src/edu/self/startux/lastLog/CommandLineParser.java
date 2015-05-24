@@ -1,5 +1,8 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Copyright 2012 StarTux.
+ * Copyright 2015 Jaypeetee.
+ * Fixed for Bukkit 1.8.4
+ *
  *
  * This file is part of LastLog.
  *
@@ -19,12 +22,13 @@
 
 package edu.self.startux.lastLog;
 
-import java.text.ParseException;
 import java.util.List;
 
 public interface CommandLineParser {
         public static class ParseException extends Exception {
-                public ParseException(Flag flag, int pos, String message) {
+				private static final long serialVersionUID = 1345345354L;
+
+				public ParseException(Flag flag, int pos, String message) {
                         super("Argument " + (pos + 1) + ": '" + flag.getFlags() + "': " + message);
                 }
         }
