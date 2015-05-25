@@ -22,6 +22,9 @@
 package edu.self.startux.lastLog;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,19 +39,28 @@ public class HelpScreen {
 
         public HelpScreen(LastLogPlugin plugin) {
                 // this.plugin = plugin;
-                File help = new File("help.yml");
-                // plugin.getResource("help.yml")
+        		plugin.getDataFolder().mkdirs();
+                File help = new File(plugin.getDataFolder(), "help.yml");
+                
                 if (!help.exists()) {
                 	System.out.println("LastLog: help.yml not found");
-                	return;
+                	 try {
+                         OutputStream out = new FileOutputStream(help);
+                         InputStream iStream = plugin.getResource("help.yml");
+                         byte[] buf = new byte[1024];
+                         int len;
+                         while((len=iStream.read(buf))>0){
+                             out.write(buf,0,len);
+                         }
+                         out.close();
+                         iStream.close();
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
                 }
-                ConfigurationSection section = YamlConfiguration.loadConfiguration(help);
-                String root =  section.getName();
-                if (root == null) {
-                	System.out.println("LastLog: root == null");
-                } else {
-                	System.out.println("LastLog: root = " + root);
-                }
+                
+                YamlConfiguration yConf = YamlConfiguration.loadConfiguration(help);
+                ConfigurationSection section = yConf;
                 
                 String message = section.getString("helpmessage");
                 if (message == null) {
@@ -63,6 +75,9 @@ public class HelpScreen {
                 }
                 matcher.appendTail(buf);
                 lines = buf.toString().split("\n");
+                // for (String line : lines) {
+                //	System.out.println("LastLog HELP: ["+line+"]");
+                //}
         }
 
         public void send(CommandSender sender) {

@@ -145,7 +145,7 @@ public class PlayerList implements Iterable<PlayerList.Entry> {
         public Entry getEntry(String name) {
             for (int i = 0; i < length; ++i) {
                     Entry entry = playerList[i];
-                    if (entry.name.equalsIgnoreCase(name)) return entry;
+                    if (entry.name != null  && entry.name.equalsIgnoreCase(name)) return entry;
             }
             return null;
         }

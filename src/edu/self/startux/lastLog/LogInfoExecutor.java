@@ -51,6 +51,7 @@ public class LogInfoExecutor implements CommandExecutor {
                 return player;
         }
 
+        
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (args.length == 0) {
