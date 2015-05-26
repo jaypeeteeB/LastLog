@@ -15,6 +15,9 @@ commands:
   loginfo:
     description: show first and last login date of a user
     usage: "Usage: /loginfo <playername>"
+  logdump:
+    description: Dump all entries from last (first) log list
+    usage: "Usage: /logdump [value]"
 permissions:
   lastlog.*:
     description: "get all permission nodes"

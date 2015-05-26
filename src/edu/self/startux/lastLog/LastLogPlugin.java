@@ -39,6 +39,7 @@ public class LastLogPlugin extends JavaPlugin implements Listener {
         private LastLogExecutor firstLogExecutor = new LastLogExecutor(this, false);
         private LastLogExecutor lastLogExecutor = new LastLogExecutor(this, true);
         private LogInfoExecutor logInfoExecutor = new LogInfoExecutor(this);
+        private DumpInfoExecutor dumpInfoExecutor = new DumpInfoExecutor(this);
         private HelpScreen helpScreen;
 
         // // debug function. requires command registration!
@@ -54,11 +55,17 @@ public class LastLogPlugin extends JavaPlugin implements Listener {
                 getCommand("firstlog").setExecutor(firstLogExecutor);
                 getCommand("lastlog").setExecutor(lastLogExecutor);
                 getCommand("loginfo").setExecutor(logInfoExecutor);
+                getCommand("logdump").setExecutor(dumpInfoExecutor);
+                
                 getServer().getPluginManager().registerEvents(this, this);
                 // logger = getServer().getLogger();
                 // Apparently what takes the most time are the following I/O heavy instructions.
                 // Hence, their output will be cached. Initialize the cache with bukkit data.
                 OfflinePlayer[] players = getServer().getOfflinePlayers();
+                for (OfflinePlayer p : players) {
+                	System.out.println (">>>"+p.getName());
+                }
+                
                 firstlogList = new PlayerList(players, false);
                 lastlogList = new PlayerList(players, true);
                 helpScreen = new HelpScreen(this);

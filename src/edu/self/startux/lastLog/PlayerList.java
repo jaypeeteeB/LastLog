@@ -21,6 +21,7 @@
 
 package edu.self.startux.lastLog;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -101,17 +102,24 @@ public class PlayerList implements Iterable<PlayerList.Entry> {
                 };
         }
 
-        public PlayerList(OfflinePlayer[] playerList, boolean lastlog) {
+        public PlayerList(OfflinePlayer[] oplayerList, boolean lastlog) {
                 int tmplen = 512;
-                length = playerList.length;
+                length = oplayerList.length;
                 while (tmplen < length) tmplen *= 2;
                 this.playerList = new Entry[tmplen];
                 
                 int i = 0;
-                for (OfflinePlayer player : playerList) {
-                        long time = (lastlog ? player.getLastPlayed() : player.getFirstPlayed());
-                        // this.playerList[i++] = new Entry(player.getName(), time);
-                        this.playerList[i++] = new Entry(player, time);
+                for (OfflinePlayer player : oplayerList) {
+                	long time = (lastlog ? player.getLastPlayed() : player.getFirstPlayed());
+                	// this.playerList[i++] = new Entry(player.getName(), time);
+                	this.playerList[i++] = new Entry(player, time);
+                         
+                	SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                	String ss = s.format(time);
+                	String message = (lastlog? "(0)" : "(1)") + 
+                			"[" + player.getUniqueId() + "]: '" + player.getName() + "' " + ss;
+                		
+                	System.out.println(message); 
                 }
         }
 
@@ -161,15 +169,6 @@ public class PlayerList implements Iterable<PlayerList.Entry> {
         	return this.getEntry(player.getUniqueId());
         }
 
-        Entry addEntry(String name) {
-            length += 1;
-            if (length > playerList.length) {
-                    playerList = Arrays.copyOf(playerList, playerList.length * 2);
-            }
-            Entry entry = new Entry(name, 0);
-            playerList[length - 1] = entry;
-            return entry;
-        }
         Entry addEntry(OfflinePlayer player) {
             length += 1;
             if (length > playerList.length) {
@@ -180,13 +179,6 @@ public class PlayerList implements Iterable<PlayerList.Entry> {
             return entry;
         }
 
-        public void set(String name, long time) {
-                Entry entry = getEntry(name);
-                if (entry == null) {
-                        entry = addEntry(name);
-                }
-                entry.time = time;
-        }
         public void set(OfflinePlayer player, long time) {
             Entry entry = getEntry(player.getName());
             if (entry == null) {
