@@ -29,6 +29,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class PlayerList implements Iterable<PlayerList.Entry> {
         final private static int PAGE_LENGTH = 10; // how many lines per page?
@@ -155,6 +156,9 @@ public class PlayerList implements Iterable<PlayerList.Entry> {
                     if (entry.uuid == uuid) return entry;
             }
             return null;
+        }
+        public Entry getEntry(Player player) {
+        	return this.getEntry(player.getUniqueId());
         }
 
         Entry addEntry(String name) {

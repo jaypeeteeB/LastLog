@@ -21,6 +21,8 @@
 
 package edu.self.startux.lastLog;
 
+import java.text.DateFormat;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -77,11 +79,16 @@ public class LastLogPlugin extends JavaPlugin implements Listener {
          */
         @EventHandler
         public void onPlayerJoin(PlayerJoinEvent event) {
-                Player player = event.getPlayer();
-                String name = player.getName();
                 
+        	Player player = event.getPlayer();
+                String name = player.getName();
                 long last = System.currentTimeMillis();
-                // lastlogList.set(name, last);
+                long previous = last;
+                PlayerList.Entry entry = lastlogList.getEntry(player);
+                if (entry != null) {
+                	previous = entry.time;
+                }
+                
                 lastlogList.set(player, last);
                 
                 
@@ -102,6 +109,10 @@ public class LastLogPlugin extends JavaPlugin implements Listener {
                                         rec.sendMessage(message);
                                 }
                         }
+                } else {
+                	String message = "Your last login was " + LastLogColors.DATE +
+                			DateFormat.getDateInstance().format(previous);
+                	player.sendMessage(message);                	
                 }
         }
 
